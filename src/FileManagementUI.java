@@ -122,7 +122,6 @@ public class FileManagementUI extends JFrame {
 
         File file = fileSystem.searchFile(selected);
         if (file == null) return;
-
         String content = JOptionPane.showInputDialog(this, "Content:", file.getContent());
         if (content != null) {
             fileSystem.writeToFile(selected, content);
