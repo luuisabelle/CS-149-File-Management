@@ -36,7 +36,7 @@ public class FileManagementUI extends JFrame {
         leftPanel.setBorder(BorderFactory.createTitledBorder("All Files"));
 
         //JPanel midPanel = new JPanel(new BorderLayout(5, 5));
-        JPanel midPanel = new JPanel(new GridLayout(1,2));
+        JPanel midPanel = new JPanel(new GridLayout(1,2));//used a gird for put two scroll panes
        // midPanel.setBorder(BorderFactory.createTitledBorder("Creation Date"));
         fileDateModel = new DefaultListModel<>();
         fileDateList = new JList<>(fileDateModel);

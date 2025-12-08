@@ -20,7 +20,7 @@ public class File {
         this.storedBlocks = new ArrayList<>();
     }
 
-    public String getcreateDate() {
+    public String getcreateDate() {//changed the data to datetimeformatter to sim dates on windows
         return creationDate.format(DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss"));
     }
     public String getmodDate() {
