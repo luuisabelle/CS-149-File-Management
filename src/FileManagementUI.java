@@ -6,6 +6,10 @@ public class FileManagementUI extends JFrame {
     private FileSystem fileSystem;
     private DefaultListModel<String> fileListModel;
     private JList<String> fileList;
+    private DefaultListModel<String> fileDateModel;
+    private JList<String> fileDateList;
+    private DefaultListModel<String> fileSizeModel;
+    private JList<String> fileSizeList;
     private DefaultListModel<String> openFilesModel;
     private JList<String> openFilesList;
 
@@ -13,7 +17,7 @@ public class FileManagementUI extends JFrame {
         fileSystem = new FileSystem();
 
         setTitle("File Management System");
-        setSize(700, 500);
+        setSize(1000, 500);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
 
@@ -31,11 +35,31 @@ public class FileManagementUI extends JFrame {
         JPanel leftPanel = new JPanel(new BorderLayout(5, 5));
         leftPanel.setBorder(BorderFactory.createTitledBorder("All Files"));
 
+        //JPanel midPanel = new JPanel(new BorderLayout(5, 5));
+        JPanel midPanel = new JPanel(new GridLayout(1,2));//used a gird for put two scroll panes
+       // midPanel.setBorder(BorderFactory.createTitledBorder("Creation Date"));
+        fileDateModel = new DefaultListModel<>();
+        fileDateList = new JList<>(fileDateModel);
+        fileDateList.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        JScrollPane dateScroll = new JScrollPane(fileDateList);
+        fileSizeModel = new DefaultListModel<>();
+        fileSizeList = new JList<>(fileSizeModel);
+        fileSizeList.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        JScrollPane sizeScroll = new JScrollPane(fileSizeList);
+        dateScroll.setBorder(BorderFactory.createTitledBorder("Date Modified"));
+        sizeScroll.setBorder(BorderFactory.createTitledBorder("Size"));
+        midPanel.add(dateScroll);
+        midPanel.add(sizeScroll);
+        //JPanel fakepanel = new JPanel(new GridLayout(2, 2, 5, 60));
+        //midPanel.add(fakepanel,BorderLayout.SOUTH);
+        
+
         fileListModel = new DefaultListModel<>();
         fileList = new JList<>(fileListModel);
         fileList.setFont(new Font("Monospaced", Font.PLAIN, 14));
         JScrollPane fileScroll = new JScrollPane(fileList);
         leftPanel.add(fileScroll, BorderLayout.CENTER);
+        
 
         JPanel leftButtonPanel = new JPanel(new GridLayout(2, 2, 5, 5));
 
@@ -78,6 +102,7 @@ public class FileManagementUI extends JFrame {
         rightPanel.add(rightButtonPanel, BorderLayout.SOUTH);
 
         centerPanel.add(leftPanel);
+        centerPanel.add(midPanel);
         centerPanel.add(rightPanel);
 
         add(centerPanel, BorderLayout.CENTER);
@@ -113,14 +138,21 @@ public class FileManagementUI extends JFrame {
         if (file != null) {
             fileSystem.openFile(file);
             refreshOpenFilesList();
+            refreshFileList();
         }
     }
 
     private void writeFile() {
         String selected = openFilesList.getSelectedValue();
-        if (selected == null) return;
-
+        if (selected == null){
+            JOptionPane.showMessageDialog(this,
+                    "Please select a file to write",
+                    "No Selection",
+                    JOptionPane.WARNING_MESSAGE);
+             return;
+            }
         File file = fileSystem.searchFile(selected);
+
         if (file == null) return;
 
         String content = JOptionPane.showInputDialog(this, "Content:", file.getContent());
@@ -141,8 +173,10 @@ public class FileManagementUI extends JFrame {
 
         File file = fileSystem.searchFile(selected);
         if (file != null) {
-            fileSystem.closeFile(file);
+
             refreshOpenFilesList();
+            refreshFileList();
+            fileSystem.closeFile(file);        
         }
     }
 
@@ -192,17 +226,25 @@ public class FileManagementUI extends JFrame {
 
     private void refreshFileList() {
         fileListModel.clear();
+        fileDateModel.clear();
+        fileSizeModel.clear();
         ArrayList<File> files = fileSystem.getFiles();
         for (File file : files) {
             fileListModel.addElement(file.getName());
+            fileDateModel.addElement(file.getcreateDate());
+            fileSizeModel.addElement(String.valueOf(file.getSize()));
         }
     }
 
     private void refreshOpenFilesList() {
         openFilesModel.clear();
+        fileDateModel.clear();
+        fileSizeModel.clear();
         ArrayList<File> openFiles = fileSystem.getOpenFiles();
         for (File file : openFiles) {
             openFilesModel.addElement(file.getName());
+            fileDateModel.addElement(file.getcreateDate());
+            fileSizeModel.addElement(String.valueOf(file.getSize()));
         }
     }
 

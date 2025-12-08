@@ -1,11 +1,13 @@
 import java.util.ArrayList;
 import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class File {
     private String name;
     private String content;
     private double size;
-    private Date creationDate;
+    private LocalDateTime creationDate;
     private Date modificationDate;
     private ArrayList<Integer> storedBlocks;
 
@@ -13,11 +15,17 @@ public class File {
         this.name = name;
         this.content = "";
         this.size = 0;
-        this.creationDate = new Date();
+        this.creationDate = LocalDateTime.now();
         this.modificationDate = new Date();
         this.storedBlocks = new ArrayList<>();
     }
 
+    public String getcreateDate() {//changed the data to datetimeformatter to sim dates on windows
+        return creationDate.format(DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss"));
+    }
+    public String getmodDate() {
+        return modificationDate.toString();
+    }
     public String getName() {
         return name;
     }
